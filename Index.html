@@ -1,7 +1,181 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TV Rewards Demo</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f5f7;color:#17202a;font-family:Arial,sans-serif}
+header{background:#111827;color:white;padding:20px;text-align:center}
+header h1{margin:0;font-size:25px}
+.container{max-width:900px;margin:auto;padding:16px}
+.card{background:white;border-radius:16px;padding:18px;margin-bottom:18px;box-shadow:0 3px 12px #0001}
+.balance{font-size:32px;font-weight:bold;margin-top:8px}
+.note{font-size:13px;color:#777}
+h2{font-size:20px;margin:20px 0 12px}
+.videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px}
+.video{background:white;border-radius:15px;overflow:hidden;box-shadow:0 3px 12px #0001}
+.video video{display:block;width:100%;height:180px;background:#111}
+.info{padding:14px}
+.info h3{margin:0 0 8px}
+.reward{font-weight:bold;margin-bottom:10px}
+button{border:0;border-radius:9px;padding:12px;width:100%;background:#2563eb;color:white;font-weight:bold}
+button:disabled{background:#9ca3af}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:11px;border-bottom:1px solid #eee}
+th{background:#f3f4f6}
+.tablewrap{overflow:auto}
+.withdraw button{background:#16a34a}
+#message{margin-top:12px;padding:12px;border-radius:9px;background:#fff7ed;color:#9a3412;display:none}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>📺 TV Rewards Demo</h1>
+<p>Vidéos et suivi des récompenses</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<div>Solde</div>
+<div class="balance" id="balance">0 F</div>
+<div class="note">Prototype de démonstration</div>
+</div>
+
+<h2>🎬 Vidéos disponibles</h2>
+<div class="videos" id="videos"></div>
+
+<h2>📊 Historique des gains</h2>
+<div class="card tablewrap">
+<table>
+<thead>
+<tr>
+<th>Vidéo</th>
+<th>Durée</th>
+<th>Montant</th>
+</tr>
+</thead>
+<tbody id="history">
+<tr>
+<td colspan="3">Aucun gain enregistré</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>💸 Retrait</h2>
+<div class="card withdraw">
+<p>Solde disponible : <strong id="withdrawBalance">0 F</strong></p>
+<button onclick="requestWithdrawal()">Demander un retrait</button>
+<div id="message">
+Veuillez contacter votre leader pour finaliser votre demande de retrait.
+</div>
+</div>
+
+</div>
+
+<script>
+
+const videos=[
+"Vidéo 1","Vidéo 2","Vidéo 3","Vidéo 4","Vidéo 5",
+"Vidéo 6","Vidéo 7","Vidéo 8","Vidéo 9","Vidéo 10",
+"Vidéo 11","Vidéo 12","Vidéo 13","Vidéo 14","Vidéo 15",
+"Vidéo 16","Vidéo 17","Vidéo 18","Vidéo 19","Vidéo 20"
+];
+
+/*
+  Remplace ensuite chaque URL par une vidéo que tu as
+  le droit d'utiliser.
+*/
+const videoSources=new Array(20).fill("");
+
+let balance=0;
+const completed=new Set();
+
+const container=document.getElementById("videos");
+
+videos.forEach((name,index)=>{
+
+const card=document.createElement("div");
+card.className="video";
+
+const src=videoSources[index];
+
+card.innerHTML=`
+<video controls preload="metadata">
+${src ? `<source src="${src}" type="video/mp4">` : ""}
+</video>
+
+<div class="info">
+<h3>${name}</h3>
+<div class="reward">Récompense affichée : 20 000 F</div>
+<button id="btn-${index}" onclick="completeVideo(${index})">
+Marquer comme regardée
+</button>
+</div>
+`;
+
+container.appendChild(card);
+
+});
+
+function completeVideo(index){
+
+if(completed.has(index)){
+alert("Cette vidéo a déjà été enregistrée.");
+return;
+}
+
+completed.add(index);
+
+const reward=20000;
+balance+=reward;
+
+document.getElementById("balance").textContent=
+balance.toLocaleString("fr-FR")+" F";
+
+document.getElementById("withdrawBalance").textContent=
+balance.toLocaleString("fr-FR")+" F";
+
+const history=document.getElementById("history");
+
+if(completed.size===1){
+history.innerHTML="";
+}
+
+const row=document.createElement("tr");
+
+row.innerHTML=`
+<td>${videos[index]}</td>
+<td>1 minute</td>
+<td>${reward.toLocaleString("fr-FR")} F</td>
+`;
+
+history.appendChild(row);
+
+document.getElementById("btn-"+index).disabled=true;
+document.getElementById("btn-"+index).textContent="Déjà enregistrée";
+
+}
+
+function requestWithdrawal(){
+
+document.getElementById("message").style.display="block";
+
+}
+
+</script>
+
+</body>
+</html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Google TV</title>
 
